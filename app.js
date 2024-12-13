@@ -13,16 +13,17 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-mongoose.promise = global.Promise;
-mongoose.set("strictQuery", false);
+mongoose.Promise = global.Promise;
+mongoose.set('strictQuery', false);
 mongoose
-     .connect(DatabaseURI, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-     })
-     .then(() => console.log('Connected to database'))
-     .catch((err) => console.error(err));
+    .connect(DatabaseURI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+    })
+    .then(() => console.log('Connected to database'))
+    .catch((err) => console.error('Database connection error:', err));
 
 Router(app);
 
-app.listen(3000, () => console.log('Server is running on port 3000'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
