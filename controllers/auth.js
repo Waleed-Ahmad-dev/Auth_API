@@ -1,34 +1,39 @@
-import  User  from '../models/User.js';
-import Blacklist from '../models/Blacklist.js';
+import prisma from '../prismaClient.js'
 import bcrypt from 'bcrypt';
-
+import { SECRET_ACCESS_TOKEN } from '../config/index.js';
 
 export async function Register(req, res) {
-     const { first_name, last_name, email, password } = req.body; // Extract the data from the request body
+     const { first_name, last_name, email, password } = req.body;
+
+     const hashedPassword = await bcrypt.hash(password, 10)
 
      try {
-          const newUser = new User({
-               first_name,
-               last_name,
-               email,
-               password
+          const existingUser = await prisma.user.findUnique({
+               where: { email },
           });
-
-          const existingUser = await User.findOne({ email });
           if (existingUser) {
                return res.status(400).json({
                     status: 'Failed',
                     data: [],
                     message: 'It seems like you already have an account. Please Log In instead.'
                });
-          }
+          };
+          const newUser = await prisma.user.create({
+               data: {
+                    first_name,
+                    last_name,
+                    email,
+                    password: hashedPassword,
+               },
+          });
 
-          const savedUser = await newUser.save();
-
-          const { role, ...user_data } = savedUser._doc;
           res.status(200).json({
                status: 'Success',
-               data: [user_data],
+               data: {
+                    first_name: newUser.first_name,
+                    last_name: newUser.last_name,
+                    email: newUser.email,
+               },
                message: 'Thank you for registering! Your account has been successfully created.'
           });
      } catch (err) {
@@ -47,8 +52,16 @@ export async function Login(req, res) {
      const { email, password } = req.body;
 
      try {
-          const user = await User.findOne({ email }).select("+password");
-
+          const user = await prisma.user.findUnique({
+               where: { email },
+               select: {
+                    id: true,
+                    first_name: true,
+                    last_name: true,
+                    email: true,
+                    password: true,
+               },
+          });
           if (!user) {
                return res.status(404).json({
                     status: 'Failed',
@@ -57,10 +70,7 @@ export async function Login(req, res) {
                });
           }
 
-          const isPasswordValid = await bcrypt.compare(
-               `${password}`, 
-               `${user.password}` 
-          );
+          const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (!isPasswordValid) {
                return res.status(401).json({
@@ -70,7 +80,7 @@ export async function Login(req, res) {
                });
           };
 
-          const { password: userPassword, ...user_data } = user._doc;
+          const { password: _, ...user_data } = user;
 
           let options = {
                maxAge: 20 * 60 * 1000,
@@ -79,15 +89,15 @@ export async function Login(req, res) {
                sameSite: "None",
           };
 
-          const token = user.generateAccessJWT();
+          const token = jwt.sign({ id: user.id }, SECRET_ACCESS_TOKEN, { expiresIn: '20m' });
+
           res.cookie("SessionID", token, options);
+
           res.status(200).json({
                status: 'Success',
                data: [user_data],
                message: 'Logged in successfully'
           });
-
-
      } catch (err) {
           res.status(500).json({
                status: 'error',
@@ -105,15 +115,25 @@ export async function Logout(req, res) {
      try {
           const authHeader = req.headers['cookie']; 
           if (!authHeader) return res.sendStatus(204); 
+
+
           const cookie = authHeader.split('=')[1]; 
           const accessToken = cookie.split(';')[0];
-          const checkIfBlacklisted = await Blacklist.findOne({ token: accessToken }); 
+
+
+          const checkIfBlacklisted = await prisma.blacklist.findUnique({
+               where: { token: accessToken },
+          }); 
           if (checkIfBlacklisted) return res.sendStatus(204);
-               const newBlacklist = new Blacklist({
-               token: accessToken,
+
+          await prisma.blacklist.create({
+               data: { token: accessToken },
           });
-          await newBlacklist.save();
-          res.setHeader('Clear-Site-Data', '"cookies"');
+          res.clearCookie('SessionID', {
+               httpOnly: true,
+               secure: true,
+               sameSite: 'None',
+          });
           res.status(200).json({ message: 'You are logged out!' });
      } catch (err) {
           res.status(500).json({

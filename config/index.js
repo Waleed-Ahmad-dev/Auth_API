@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const DatabaseURI = process.env.DATABASE_URI;
+const DatabaseURL = process.env.DATABASE_URL;
 
-if (!DatabaseURI) {
+if (!DatabaseURL) {
      console.error('DATABASE_URI is not defined in .env');
      throw new Error('DATABASE_URI is not defined in .env');
 }
@@ -16,4 +16,4 @@ if (!SECRET_ACCESS_TOKEN) {
      throw new Error('SECRET_ACCESS_TOKEN is not defined in .env');
 }
 
-export default DatabaseURI;
+export default DatabaseURL;

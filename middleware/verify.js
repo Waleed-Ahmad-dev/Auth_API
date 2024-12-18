@@ -1,29 +1,36 @@
-import User from "../models/User.js";
+import prisma from '../prismaClient.js';
+import { SECRET_ACCESS_TOKEN } from '../config/index.js';
 import jwt from "jsonwebtoken";
 
 export async function Verify(req, res, next) {
      try {
-          const authHeader = req.headers["cookie"]; 
-
+          const authHeader = req.headers['authorization'] || req.headers['cookie'];
           if (!authHeader) return res.sendStatus(401); 
-          const cookie = authHeader.split("=")[1]; 
-          const accessToken = cookie.split(";")[0];
-          const checkIfBlacklisted = await Blacklist.findOne({ token: accessToken });
-          if (checkIfBlacklisted)
-               return res
-                    .status(401)
-                    .json({ message: "This session has expired. Please login" });
-          jwt.verify(accessToken, SECRET_ACCESS_TOKEN, async (err, decoded) => {
+
+          const token = authHeader.includes('Bearer') ? authHeader.split(' ')[1] : authHeader.split('=')[1];
+
+          const blacklistedToken = await prisma.blacklist.findUnique({
+               where: { token },
+          });
+          if (blacklistedToken) {
+               return res.status(401).json({ message: 'Token has been invalidated. Please login again.' });
+          }
+
+          jwt.verify(token, SECRET_ACCESS_TOKEN, async (err, decoded) => {
                if (err) {
-                    return res
-                         .status(401)
-                         .json({ message: "This session has expired. Please login" });
+                    return res.status(401).json({ message: 'Invalid or expired token. Please login again.' });
                }
-               req.user = decoded;
-               const { id } = decoded; 
-               const user = await User.findById(id); 
-               const { password, ...data } = user._doc; 
-               req.user = data;
+
+
+          const user = await prisma.user.findUnique({
+               where: { id: decoded.id },
+               select: { id: true, email: true, role: true },
+          });
+          if (!user) {
+               return res.status(404).json({ message: 'User not found.' });
+          }
+
+          req.user = user;
           next();
           });
      } catch (err) {
@@ -37,25 +44,21 @@ export async function Verify(req, res, next) {
      }
 }
 
-export function VerifyRole(req, res, next) {
-     try {
+export function VerifyRole(requiredRole) {
+     return (req, res, next) => {
+          try {
           const user = req.user;
-          const { role } = user;
-
-          if (role !== "admin") {
-               return res.status(401).json({
-                    status: "failed",
-                    message: "You are not authorized to view this page.",
+     
+          if (!user || user.role !== requiredRole) {
+               return res.status(403).json({
+                    message: 'Forbidden: You do not have the necessary permissions to access this resource.',
                });
           }
+     
           next();
-     } catch (err) {
-          res.status(500).json({
-               status: "error",
-               code: 500,
-               data: [],
-               message: "Internal Server Error",
-          });
-          console.log(err);
-     }
+          } catch (err) {
+               console.error(err);
+               res.status(500).json({ message: 'Internal server error.' });
+          }
+     };
 }
