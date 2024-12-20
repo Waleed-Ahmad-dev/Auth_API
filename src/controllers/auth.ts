@@ -1,8 +1,11 @@
 import prisma from '../prismaClient.js'
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 import { SECRET_ACCESS_TOKEN } from '../config/index.js';
+import { CustomRequest, CustomResponse } from '../types/index.js';
+import { CookieOptions } from 'express';
 
-export async function Register(req, res) {
+export async function Register(req: CustomRequest, res: CustomResponse): Promise<void> {
      const { first_name, last_name, email, password } = req.body;
 
      const hashedPassword = await bcrypt.hash(password, 10)
@@ -12,7 +15,7 @@ export async function Register(req, res) {
                where: { email },
           });
           if (existingUser) {
-               return res.status(400).json({
+               res.status(400).json({
                     status: 'Failed',
                     data: [],
                     message: 'It seems like you already have an account. Please Log In instead.'
@@ -48,7 +51,7 @@ export async function Register(req, res) {
 };
 
 
-export async function Login(req, res) {
+export async function Login(req: CustomRequest, res: CustomResponse): Promise<void> {
      const { email, password } = req.body;
 
      try {
@@ -63,17 +66,18 @@ export async function Login(req, res) {
                },
           });
           if (!user) {
-               return res.status(404).json({
+               res.status(404).json({
                     status: 'Failed',
                     data: [],
                     message: 'User not found'
                });
+               throw new Error("User not found")
           }
 
           const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (!isPasswordValid) {
-               return res.status(401).json({
+               res.status(401).json({
                     status: 'Failed',
                     data: [],
                     message: 'Invalid credentials'
@@ -82,12 +86,28 @@ export async function Login(req, res) {
 
           const { password: _, ...user_data } = user;
 
-          let options = {
+          let options: CookieOptions = {
                maxAge: 20 * 60 * 1000,
                httpOnly: true,
                secure: true,
-               sameSite: "None",
-          };
+               sameSite: "none",
+          }
+
+          if (!SECRET_ACCESS_TOKEN) {
+               res.status(403).json({
+                    status: 'Failed',
+                    data: [],
+                    message: 'No secret access token found'
+               })
+          }
+
+          if(!SECRET_ACCESS_TOKEN) {
+               throw new Error('SECRET_ACCESS_TOKEN is not defined');
+          }
+
+          if(!user) {
+               throw new Error('User not found');
+          }
 
           const token = jwt.sign({ id: user.id }, SECRET_ACCESS_TOKEN, { expiresIn: '20m' });
 
@@ -111,28 +131,28 @@ export async function Login(req, res) {
 }
 
 
-export async function Logout(req, res) {
+export async function Logout(req: CustomRequest, res: CustomResponse): Promise<void> {
      try {
           const authHeader = req.headers['cookie']; 
-          if (!authHeader) return res.sendStatus(204); 
+          if (!authHeader) return; 
 
 
           const cookie = authHeader.split('=')[1]; 
           const accessToken = cookie.split(';')[0];
 
 
-          const checkIfBlacklisted = await prisma.blacklist.findUnique({
+          const checkIfBlacklisted = await prisma.blacklists.findUnique({
                where: { token: accessToken },
           }); 
-          if (checkIfBlacklisted) return res.sendStatus(204);
+          if (checkIfBlacklisted) return;
 
-          await prisma.blacklist.create({
+          await prisma.blacklists.create({
                data: { token: accessToken },
           });
           res.clearCookie('SessionID', {
                httpOnly: true,
                secure: true,
-               sameSite: 'None',
+               sameSite: "none",
           });
           res.status(200).json({ message: 'You are logged out!' });
      } catch (err) {
@@ -144,14 +164,14 @@ export async function Logout(req, res) {
      res.end();
 }
 
-export async function DeleteUser(req, res) {
+export async function DeleteUser(req: CustomRequest, res: CustomResponse): Promise<void> {
      const { id } = req.params;
      try {
           const user = await prisma.user.findUnique({
                where: { id: parseInt(req.params.id) },
           });
           if (!user) {
-               return res.status(404).json({
+               res.status(404).json({
                     status: 'Failed',
                     data: [],
                     message: 'User not found'
@@ -171,7 +191,7 @@ export async function DeleteUser(req, res) {
      }
 }
 
-export async function UpdateUser(req, res) {
+export async function UpdateUser(req: CustomRequest, res: CustomResponse): Promise<void> {
      const { id } = req.params;
      const { first_name, last_name, email, password } = req.body;
 
@@ -179,12 +199,16 @@ export async function UpdateUser(req, res) {
           const user = await prisma.user.findUnique({where: {id: parseInt(id)} });
 
           if(!user) {
-               return res.status(404).json({
+               res.status(404).json({
                     status: 'Failed',
                     data: [],
                     message: 'User not found'
                });
           };
+
+          if(!user){
+               throw new Error('User not found');
+          }
 
           let hashedPassword;
           if(password) {

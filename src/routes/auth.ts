@@ -48,9 +48,9 @@ router.post(
 
 router.get('/logout', Logout);
 
-router.delete('/delete/:id', Verify, VerifyRole('admin'), DeleteUser);
+router.delete('/delete/:id', Verify, VerifyRole('ADMIN'), DeleteUser);
 
-router.put('/update/:id', Verify, VerifyRole('admin'), UpdateUser);
+router.put('/update/:id', Verify, VerifyRole('ADMIN'), UpdateUser);
 
 
 export default router;
