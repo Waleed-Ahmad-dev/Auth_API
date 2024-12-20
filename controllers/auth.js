@@ -143,3 +143,74 @@ export async function Logout(req, res) {
      }
      res.end();
 }
+
+export async function DeleteUser(req, res) {
+     const { id } = req.params;
+     try {
+          const user = await prisma.user.findUnique({
+               where: { id: parseInt(req.params.id) },
+          });
+          if (!user) {
+               return res.status(404).json({
+                    status: 'Failed',
+                    data: [],
+                    message: 'User not found'
+               });
+          };
+          await prisma.user.delete({ where: { id: parseInt(req.params.id) } });
+          res.status(200).json({ 
+               status: 'Success',
+               data: [],
+               message: 'User deleted successfully'
+          });
+     } catch (err) {
+          res.status(500).json({
+               status: 'error',
+               message: 'Internal Server Error',
+          });
+     }
+}
+
+export async function UpdateUser(req, res) {
+     const { id } = req.params;
+     const { first_name, last_name, email, password } = req.body;
+
+     try {
+          const user = await prisma.user.findUnique({where: {id: parseInt(id)} });
+
+          if(!user) {
+               return res.status(404).json({
+                    status: 'Failed',
+                    data: [],
+                    message: 'User not found'
+               });
+          };
+
+          let hashedPassword;
+          if(password) {
+               hashedPassword = await bcrypt.hash(password, 10);
+          } else {
+               hashedPassword = user.password;
+          }
+
+          const updatedUser = await prisma.user.update({
+               where: { id: parseInt(id) },
+               data: {
+                    ...(first_name && { first_name }),
+                    ...(last_name && { last_name }),
+                    ...(email && { email }),
+                    ...(hashedPassword && { password: hashedPassword }),
+               },
+          });
+          res.status(200).json({ 
+               status: 'Success',
+               data: updatedUser,
+               message: 'User updated successfully'
+          });
+     } catch (err) {
+          res.status(500).json({
+               status: 'error',
+               message: 'Internal Server Error',
+          });
+     }
+}

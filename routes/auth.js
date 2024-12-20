@@ -1,8 +1,9 @@
 import express from 'express';
-import { Logout, Register } from '../controllers/auth.js';
+import { DeleteUser, Logout, Register, UpdateUser } from '../controllers/auth.js';
 import Validate from '../middleware/validate.js';
 import { check } from 'express-validator';
 import { Login } from '../controllers/auth.js';
+import { Verify, VerifyRole } from '../middleware/verify.js';
 
 const router = express.Router();
 
@@ -46,5 +47,10 @@ router.post(
 );
 
 router.get('/logout', Logout);
+
+router.delete('/delete/:id', Verify, VerifyRole('admin'), DeleteUser);
+
+router.put('/update/:id', Verify, VerifyRole('admin'), UpdateUser);
+
 
 export default router;
