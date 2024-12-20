@@ -1,7 +1,7 @@
 import express from 'express';
 import { DeleteUser, Logout, Register, UpdateUser } from '../controllers/auth.js';
 import Validate from '../middleware/validate.js';
-import { check } from 'express-validator';
+import { check } from '../../node_modules/express-validator/lib/index.js';
 import { Login } from '../controllers/auth.js';
 import { Verify, VerifyRole } from '../middleware/verify.js';
 

@@ -1,5 +1,5 @@
-import { validationResult } from 'express-validator';
-import { CustomRequest, CustomResponse, ExtendedValidationError } from '../types';
+import { validationResult } from '../../node_modules/express-validator/lib/validation-result';
+import { CustomRequest, CustomResponse, ExtendedValidationError } from '../types/index';
 import { NextFunction } from 'express';
 
 
