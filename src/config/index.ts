@@ -1,5 +1,4 @@
-import  * as dotenv  from "dotenv";
-
+import dotenv from 'dotenv';
 dotenv.config();
 
 const DatabaseURL = process.env.DATABASE_URL;

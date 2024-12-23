@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { ValidationError as ExpressValidationError } from 'express-validator';
 
 
 export interface ExtendedValidationError extends Record<string, any> {
