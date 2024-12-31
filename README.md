@@ -1,10 +1,10 @@
 # Auth API
 
-![Auth API](https://img.shields.io/badge/AuthAPI-v1.0-blue?style=for-the-badge)
-![Node.js](https://img.shields.io/badge/Node.js-v16.x-green?style=for-the-badge)
-![Prisma](https://img.shields.io/badge/Prisma-ORM-orange?style=for-the-badge)
-![TypeScript](https://img.shields.io/badge/TypeScript-v4.x-blue?style=for-the-badge)
-![MySQL](https://img.shields.io/badge/MySQL-v8.x-blue?style=for-the-badge)
+[![Auth API](https://img.shields.io/badge/AuthAPI-v1.0-blue?style=for-the-badge)](https://github.com/Waleed-Ahmad-dev/Auth_API)
+[![Node.js](https://img.shields.io/badge/Node.js-v16.x-green?style=for-the-badge)](https://nodejs.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-orange?style=for-the-badge)](https://www.prisma.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-v4.x-blue?style=for-the-badge)](https://www.typescriptlang.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-v8.x-blue?style=for-the-badge)](https://www.mysql.com/)
 
 An advanced **authentication API** built with **Node.js** and **Express.js**, utilizing **Prisma** ORM for database interaction, **MySQL** as the database, and **JWT** for secure token-based authentication. The API is entirely written in **TypeScript** for enhanced reliability and maintainability.
 
@@ -25,14 +25,14 @@ An advanced **authentication API** built with **Node.js** and **Express.js**, ut
 
 | **Technology** | **Version**  | **Purpose**                                      |
 |----------------|--------------|--------------------------------------------------|
-| Node.js        | v16.x        | Backend runtime environment                      |
-| Express.js     | v4.x         | Web framework for building APIs                 |
-| Prisma         | v4.x         | ORM for database interaction with MySQL         |
-| MySQL          | v8.x         | Relational database for storing user data       |
-| TypeScript     | v4.x         | Strongly typed JavaScript for better reliability|
-| Bcrypt         | v5.x         | Password hashing library                        |
-| JWT            | v8.x         | Secure token-based authentication               |
-| Dotenv         | v16.x        | Environment variable management                 |
+| [Node.js](https://nodejs.org/) | v16.x        | Backend runtime environment                      |
+| [Express.js](https://expressjs.com/) | v4.x         | Web framework for building APIs                 |
+| [Prisma](https://www.prisma.io/) | v4.x         | ORM for database interaction with MySQL         |
+| [MySQL](https://www.mysql.com/) | v8.x         | Relational database for storing user data       |
+| [TypeScript](https://www.typescriptlang.org/) | v4.x         | Strongly typed JavaScript for better reliability|
+| [Bcrypt](https://www.npmjs.com/package/bcrypt) | v5.x         | Password hashing library                        |
+| [JWT](https://jwt.io/) | v8.x         | Secure token-based authentication               |
+| [Dotenv](https://www.npmjs.com/package/dotenv) | v16.x        | Environment variable management                 |
 
 ---
 
@@ -155,7 +155,7 @@ Auth_API/
 ├── .gitignore            # Git ignore file
 ├── package.json          # Node.js dependencies
 ├── README.md             # Project documentation
-└── app.ts             # Entry point of the application
+└── server.ts             # Entry point of the application
 ```
 
 ---
