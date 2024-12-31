@@ -6,7 +6,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-v4.x-blue?style=for-the-badge)
 ![MySQL](https://img.shields.io/badge/MySQL-v8.x-blue?style=for-the-badge)
 
-An authentication API built with **Node.js** and **Express.js**, using **Prisma** as the ORM, **MySQL** as the database, and **JWT** for secure authentication. The API is written in **TypeScript** for type safety and maintainability.
+An advanced **authentication API** built with **Node.js** and **Express.js**, utilizing **Prisma** ORM for database interaction, **MySQL** as the database, and **JWT** for secure token-based authentication. The API is entirely written in **TypeScript** for enhanced reliability and maintainability.
 
 ---
 
@@ -17,7 +17,7 @@ An authentication API built with **Node.js** and **Express.js**, using **Prisma*
 - 📦 **Prisma ORM**: Simplified database interaction with MySQL.
 - 🔑 **Password Hashing**: Securely hashed passwords using bcrypt.
 - 📂 **Environment Variables**: Managed using dotenv.
-- ⚙️ **TypeScript**: Ensures type safety and better code quality.
+- ⚙️ **TypeScript Integration**: Ensures type safety, better error handling, and cleaner code.
 
 ---
 
@@ -155,7 +155,7 @@ Auth_API/
 ├── .gitignore            # Git ignore file
 ├── package.json          # Node.js dependencies
 ├── README.md             # Project documentation
-└── server.ts             # Entry point of the application
+└── app.ts             # Entry point of the application
 ```
 
 ---
@@ -186,7 +186,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 ### 📞 Contact
-For questions or feedback, feel free to reach out to the repository owner on [GitHub](https://github.com/Waleed-Ahmad-dev).
+- **Email**: itswaleedqureshi@gmail.com
+- **GitHub**: [Waleed Ahmad](https://github.com/Waleed-Ahmad-dev)
 
 ---
 
