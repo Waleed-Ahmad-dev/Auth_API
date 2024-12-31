@@ -1,66 +1,80 @@
 # Auth API
 
-An authentication API built with Node.js and Express.js, using Prisma as the ORM, MySQL as the database, and JWT for secure authentication.
+![Auth API](https://img.shields.io/badge/AuthAPI-v1.0-blue?style=for-the-badge)
+![Node.js](https://img.shields.io/badge/Node.js-v16.x-green?style=for-the-badge)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-orange?style=for-the-badge)
+![TypeScript](https://img.shields.io/badge/TypeScript-v4.x-blue?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-v8.x-blue?style=for-the-badge)
 
-## Features
+An authentication API built with **Node.js** and **Express.js**, using **Prisma** as the ORM, **MySQL** as the database, and **JWT** for secure authentication. The API is written in **TypeScript** for type safety and maintainability.
 
-- User registration
-- User login
-- Token-based authentication (JWT)
-- Prisma ORM integration with MySQL
-- Secure password hashing using bcrypt
-- Environment variable management using dotenv
-- Modular and scalable code structure
+---
 
-## Technologies Used
+## 🚀 Features
 
-- **Node.js**: JavaScript runtime for building the server-side API.
-- **Express.js**: Minimalist web framework for building robust APIs.
-- **Prisma**: ORM for database interaction with MySQL.
-- **MySQL**: Relational database for storing user data.
-- **JWT**: Secure token-based authentication.
-- **Bcrypt**: For hashing and comparing passwords.
-- **Dotenv**: To manage environment variables.
+- 🛡️ **User Authentication**: Secure registration and login.
+- 🔐 **JWT-based Authentication**: Stateless and secure.
+- 📦 **Prisma ORM**: Simplified database interaction with MySQL.
+- 🔑 **Password Hashing**: Securely hashed passwords using bcrypt.
+- 📂 **Environment Variables**: Managed using dotenv.
+- ⚙️ **TypeScript**: Ensures type safety and better code quality.
 
-## Installation
+---
 
-1. Clone the repository:
+## 🛠️ Technologies Used
+
+| **Technology** | **Version**  | **Purpose**                                      |
+|----------------|--------------|--------------------------------------------------|
+| Node.js        | v16.x        | Backend runtime environment                      |
+| Express.js     | v4.x         | Web framework for building APIs                 |
+| Prisma         | v4.x         | ORM for database interaction with MySQL         |
+| MySQL          | v8.x         | Relational database for storing user data       |
+| TypeScript     | v4.x         | Strongly typed JavaScript for better reliability|
+| Bcrypt         | v5.x         | Password hashing library                        |
+| JWT            | v8.x         | Secure token-based authentication               |
+| Dotenv         | v16.x        | Environment variable management                 |
+
+---
+
+## 📦 Installation
+
+1. **Clone the Repository**:
    ```bash
    git clone https://github.com/Waleed-Ahmad-dev/Auth_API.git
    cd Auth_API
    ```
 
-2. Install dependencies:
+2. **Install Dependencies**:
    ```bash
    npm install
    ```
 
-3. Set up your environment variables:
-   Create a `.env` file in the root directory and add the following variables:
+3. **Set Up Environment Variables**:
+   Create a `.env` file in the root directory and add the following:
    ```env
    DATABASE_URL="mysql://username:password@localhost:3306/database_name"
    JWT_SECRET="your_secret_key"
    ```
+   Replace `username`, `password`, and `database_name` with your MySQL credentials.
 
-   Replace `username`, `password`, and `database_name` with your MySQL credentials and database name.
-
-4. Apply Prisma migrations to set up the database:
+4. **Apply Prisma Migrations**:
    ```bash
    npx prisma migrate dev
    ```
 
-5. Start the server:
+5. **Start the Server**:
    ```bash
    npm start
    ```
-
    The API will be available at `http://localhost:3000`.
 
-## API Endpoints
+---
+
+## 🧩 API Endpoints
 
 ### Authentication Endpoints
 
-#### Register a User
+#### 📝 Register a User
 - **Endpoint**: `POST /api/auth/register`
 - **Description**: Register a new user.
 - **Request Body**:
@@ -83,7 +97,7 @@ An authentication API built with Node.js and Express.js, using Prisma as the ORM
   }
   ```
 
-#### Login a User
+#### 🔑 Login a User
 - **Endpoint**: `POST /api/auth/login`
 - **Description**: Authenticate a user and return a JWT.
 - **Request Body**:
@@ -103,7 +117,7 @@ An authentication API built with Node.js and Express.js, using Prisma as the ORM
 
 ### Protected Routes
 
-#### Get User Profile
+#### 🔒 Get User Profile
 - **Endpoint**: `GET /api/auth/profile`
 - **Description**: Retrieve the authenticated user's profile.
 - **Headers**:
@@ -121,7 +135,9 @@ An authentication API built with Node.js and Express.js, using Prisma as the ORM
   }
   ```
 
-## Project Structure
+---
+
+## 📂 Project Structure
 
 ```
 Auth_API/
@@ -133,15 +149,18 @@ Auth_API/
 │   ├── models/          # Database models
 │   ├── routes/          # API route definitions
 │   ├── services/        # Service layer for business logic
-│   └── utils/           # Utility functions
+│   ├── utils/           # Utility functions
+│   └── types/           # TypeScript type definitions
 ├── .env                  # Environment variables
 ├── .gitignore            # Git ignore file
 ├── package.json          # Node.js dependencies
 ├── README.md             # Project documentation
-└── server.js             # Entry point of the application
+└── server.ts             # Entry point of the application
 ```
 
-## How to Contribute
+---
+
+## 🤝 Contributing
 
 1. Fork the repository.
 2. Create a feature branch:
@@ -158,9 +177,16 @@ Auth_API/
    ```
 5. Open a pull request.
 
-## License
+---
+
+## 📜 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+### 📞 Contact
+For questions or feedback, feel free to reach out to the repository owner on [GitHub](https://github.com/Waleed-Ahmad-dev).
 
 ---
 
